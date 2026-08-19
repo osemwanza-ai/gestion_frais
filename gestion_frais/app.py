@@ -1,8 +1,3 @@
-
-osée Mwanza
-08:34 (il y a 0 minute)
-À moi
-
 from flask import Flask, render_template, request, send_file
 import openpyxl
 from datetime import datetime
@@ -10,7 +5,6 @@ import os
 
 app = Flask(__name__)
 
-# Utilisation d'un chemin d'accès absolu pour éviter les erreurs sur Render
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 EXCEL_FILE = os.path.join(BASE_DIR, "paiements.xlsx")
 
@@ -35,13 +29,13 @@ def index():
         montant = request.form.get('montant', 0)
         date_heure = datetime.now().strftime("%d/%m/%Y %H:%M")
 
-        # 1. Ajout automatique d'une ligne dans le fichier Excel
+        # 1. Enregistrement dans Excel
         wb = openpyxl.load_workbook(EXCEL_FILE)
         ws = wb["Paiements"]
         ws.append([date_heure, nom, classe, type_frais, montant])
         wb.save(EXCEL_FILE)
 
-        # 2. Préparation des données pour le ticket d'impression
+        # 2. Préparation du reçu
         donnees_recu = {
             'nom': nom,
             'classe': classe,
@@ -59,5 +53,6 @@ def download():
         EXCEL_FILE,
         as_attachment=True
     )
+
 if __name__ == '__main__':
     app.run()
