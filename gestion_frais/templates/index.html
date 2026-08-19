@@ -24,12 +24,13 @@
         input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
         .btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: #28a745;
             color: white;
             border: none;
             border-radius: 4px;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
         }
@@ -41,15 +42,17 @@
             padding: 10px;
             text-decoration: none;
             border-radius: 4px;
-            margin-top: 10px;
+            margin-top: 15px;
+            font-weight: bold;
         }
 
-        /* TICKET IMPRIMÉ */
+        /* CONFIGURATION D'IMPRESSION (TICKET THERMIQUE) */
         .recu-print { display: none; }
 
         @media print {
             body { background: white; margin: 0; padding: 0; }
-            .form-section, .btn-excel { display: none !important; }
+            .card { box-shadow: none; padding: 0; margin: 0; width: 100%; }
+            .form-section, .btn-excel, h2, .subtitle { display: none !important; }
             .recu-print { display: block !important; width: 100%; font-size: 12px; }
             .line { border-bottom: 1px dashed #000; margin: 5px 0; }
         }
@@ -61,7 +64,7 @@
     <h2>COMPLEXE SCOLAIRE LA CHARITÉ</h2>
     <p class="subtitle">Saisie & Impression Reçu de Paiement</p>
 
-    <!-- SECTION FORMULAIRE -->
+    <!-- FORMULAIRE DE SAISIE -->
     <div class="form-section">
         <form method="POST">
             <div class="form-group">
@@ -85,16 +88,21 @@
                 <label>Montant (FC) :</label>
                 <input type="number" step="0.01" name="montant" required placeholder="Ex: 15000">
             </div>
+            
+            <!-- BOUTON UNIQUE DE VALIDATION -->
             <button type="submit" class="btn">Valider & Imprimer le Reçu</button>
         </form>
+
+        <!-- BOUTON DE TÉLÉCHARGEMENT DE L'HISTORIQUE COMPLET EXCEL -->
         <a href="/download" class="btn-excel">📊 Télécharger l'historique Excel</a>
     </div>
 
-    <!-- SECTION REÇU (Imprimée sur le ticket) -->
+    <!-- TICKET DE REÇU À IMPRIMER -->
     {% if recu %}
     <div class="recu-print">
+        <p style="text-align: center; margin-bottom: 2px;"><strong>COMPLEXE SCOLAIRE LA CHARITÉ</strong></p>
+        <p style="text-align: center; font-size: 10px; margin-top: 0;">REÇU DE PAIEMENT</p>
         <div class="line"></div>
-        <p style="text-align: center;"><strong>REÇU DE PAIEMENT</strong></p>
         <p><strong>Date :</strong> {{ recu.date_heure }}</p>
         <p><strong>Élève :</strong> {{ recu.nom }}</p>
         <p><strong>Classe :</strong> {{ recu.classe }}</p>
@@ -102,7 +110,7 @@
         <p><strong>Motif :</strong> {{ recu.type_frais }}</p>
         <p><strong>Montant :</strong> {{ recu.montant }} FC</p>
         <div class="line"></div>
-        <p style="text-align: center;">Merci pour votre confiance !</p>
+        <p style="text-align: center; font-size: 10px; margin-top: 8px;">Merci pour votre confiance !</p>
     </div>
     {% endif %}
 </div>
