@@ -12,7 +12,7 @@ def init_excel():
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Paiements"
-        ws.append(["Date & Heure", "Nom de l'élève", "Classe", "Frais Scolaires (FC)", "Frais Inscription (FC)"])
+        ws.append(["Date & Heure", "Nom de l'élève", "Classe", "Type de Frais", "Montant (FC)"])
         wb.save(EXCEL_FILE)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -23,22 +23,22 @@ def index():
     if request.method == 'POST':
         nom = request.form.get('nom_eleve') or request.form.get('nom')
         classe = request.form.get('classe')
-        frais_scolaires = request.form.get('frais_scolaires', 0)
-        frais_inscription = request.form.get('frais_inscription', 0)
+        type_frais = request.form.get('type_frais')
+        montant = request.form.get('montant', 0)
         date_heure = datetime.now().strftime("%d/%m/%Y %H:%M")
 
         # Enregistrement dans le fichier Excel
         wb = openpyxl.load_workbook(EXCEL_FILE)
         ws = wb["Paiements"]
-        ws.append([date_heure, nom, classe, frais_scolaires, frais_inscription])
+        ws.append([date_heure, nom, classe, type_frais, montant])
         wb.save(EXCEL_FILE)
 
-        # Transmettre les données à la vue pour affichage/impression
+        # Transmettre les données au reçu
         donnees_recu = {
             'nom': nom,
             'classe': classe,
-            'frais_scolaires': frais_scolaires,
-            'frais_inscription': frais_inscription,
+            'type_frais': type_frais,
+            'montant': montant,
             'date_heure': date_heure
         }
 
