@@ -2,49 +2,118 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion Frais - CS LA CHARITÉ</title>
+    <title>Complexe Scolaire La Charité - Reçu</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #eef2f5; padding: 15px; margin: 0; }
-        .card { max-width: 480px; margin: 10px auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #1a252f; font-size: 1.3rem; margin-top: 0; }
-        label { font-weight: bold; display: block; margin-top: 14px; color: #34495e; }
-        input { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
-        button { width: 100%; padding: 14px; background: #27ae60; color: white; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 6px; margin-top: 22px; cursor: pointer; }
-        button:hover { background: #219150; }
-        .btn-excel { display: block; text-align: center; margin-top: 15px; padding: 10px; background: #2980b9; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.95rem; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .card {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 { text-align: center; color: #333; margin-bottom: 5px; }
+        p.subtitle { text-align: center; font-size: 12px; color: #666; margin-top: 0; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-weight: bold; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-excel {
+            display: block;
+            text-align: center;
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        /* TICKET IMPRIMÉ */
+        .recu-print { display: none; }
+
+        @media print {
+            body { background: white; margin: 0; padding: 0; }
+            .form-section, .btn-excel { display: none !important; }
+            .recu-print { display: block !important; width: 100%; font-size: 12px; }
+            .line { border-bottom: 1px dashed #000; margin: 5px 0; }
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>COMPLEXE SCOLAIRE LA CHARITÉ</h2>
-        <p style="text-align:center; color:#7f8c8d; font-size:0.9rem; margin-bottom: 20px;">Saisie & Impression Reçu de Paiement</p>
-        
+
+<div class="card">
+    <h2>COMPLEXE SCOLAIRE LA CHARITÉ</h2>
+    <p class="subtitle">Saisie & Impression Reçu de Paiement</p>
+
+    <!-- SECTION FORMULAIRE -->
+    <div class="form-section">
         <form method="POST">
-            <label for="eleve">Nom de l'élève :</label>
-            <input type="text" id="eleve" name="eleve" required placeholder="Ex: KABANGU MUKENDI Jean">
-
-            <label for="classe">Classe :</label>
-            <input type="text" id="classe" name="classe" required placeholder="Ex: 3ème Humanités Littéraire">
-
-            <label for="frais_scolaires">Frais Scolaires (Fc) :</label>
-            <input type="number" step="0.01" id="frais_scolaires" name="frais_scolaires" placeholder="0.00">
-
-            <label for="frais_inscription">Frais Inscription (Fc) :</label>
-            <input type="number" step="0.01" id="frais_inscription" name="frais_inscription" placeholder="0.00">
-
-            <button type="submit">Valider & Imprimer le Reçu</button>
+            <div class="form-group">
+                <label>Nom de l'élève :</label>
+                <input type="text" name="nom_eleve" required placeholder="Ex: MWANZA MUTOMBO OSEE">
+            </div>
+            <div class="form-group">
+                <label>Classe :</label>
+                <input type="text" name="classe" required placeholder="Ex: 6 ème">
+            </div>
+            <div class="form-group">
+                <label>Type de Frais :</label>
+                <select name="type_frais" required>
+                    <option value="Frais Scolaires">Frais Scolaires</option>
+                    <option value="Frais d'inscription">Frais d'inscription</option>
+                    <option value="Frais minerval">Frais minerval</option>
+                    <option value="Frais technique">Frais technique</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Montant (FC) :</label>
+                <input type="number" step="0.01" name="montant" required placeholder="Ex: 15000">
+            </div>
+            <button type="submit" class="btn">Valider & Imprimer le Reçu</button>
         </form>
-
-        <hr style="margin-top: 25px; border: 0; border-top: 1px solid #eee;">
-        <a href="/download" class="btn">📥 Télécharger l'historique Excel</a>
+        <a href="/download" class="btn-excel">📊 Télécharger l'historique Excel</a>
     </div>
+
+    <!-- SECTION REÇU (Imprimée sur le ticket) -->
     {% if recu %}
+    <div class="recu-print">
+        <div class="line"></div>
+        <p style="text-align: center;"><strong>REÇU DE PAIEMENT</strong></p>
+        <p><strong>Date :</strong> {{ recu.date_heure }}</p>
+        <p><strong>Élève :</strong> {{ recu.nom }}</p>
+        <p><strong>Classe :</strong> {{ recu.classe }}</p>
+        <div class="line"></div>
+        <p><strong>Motif :</strong> {{ recu.type_frais }}</p>
+        <p><strong>Montant :</strong> {{ recu.montant }} FC</p>
+        <div class="line"></div>
+        <p style="text-align: center;">Merci pour votre confiance !</p>
+    </div>
+    {% endif %}
+</div>
+
+{% if recu %}
 <script>
     window.onload = function() {
         window.print();
     }
 </script>
 {% endif %}
+
 </body>
 </html>
