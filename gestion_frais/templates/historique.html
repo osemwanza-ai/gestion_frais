@@ -5,7 +5,7 @@
     <title>Historique des Paiements - C.S. La Charité</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
@@ -18,32 +18,36 @@
 </head>
 <body>
 <div class="container">
-    <h2>Historique des Paiements Enregistrés</h2>
-    <a href="/" class="btn btn-home">⬅️ Retour au Formulaire</a>
+    <h2>COMPLEXE SCOLAIRE LA CHARITÉ</h2>
+    <p style="text-align: center; color: #666;">Historique Général des Paiements Enregistrés</p>
+    
+    <a href="/" class="btn btn-home">⬅️ Nouveau Paiement</a>
     <a href="/download" class="btn btn-excel">📊 Télécharger tout en Excel</a>
 
     <table>
         <thead>
             <tr>
+                <th>N°</th>
                 <th>Date & Heure</th>
                 <th>Nom de l'Élève</th>
                 <th>Classe</th>
-                <th>Type de Frais</th>
-                <th>Montant (FC)</th>
+                <th>Motif</th>
+                <th>Montant</th>
             </tr>
         </thead>
         <tbody>
             {% for p in paiements %}
             <tr>
+                <td>{{ p.id }}</td>
                 <td>{{ p.date_heure }}</td>
                 <td>{{ p.nom_eleve }}</td>
                 <td>{{ p.classe }}</td>
                 <td>{{ p.type_frais }}</td>
-                <td>{{ p.montant }} FC</td>
+                <td><strong>{{ p.montant }} FC</strong></td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="5" style="text-align: center;">Aucun paiement enregistré pour le moment.</td>
+                <td colspan="6" style="text-align: center;">Aucun paiement enregistré dans la base de données.</td>
             </tr>
             {% endif %}
         </tbody>
