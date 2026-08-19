@@ -1,5 +1,0 @@
-Flask
-openpyxl
-psycopg2-binary
-SQLAlchemy
-Flask-SQLAlchemy
