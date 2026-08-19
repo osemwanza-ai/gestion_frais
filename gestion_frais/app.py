@@ -8,6 +8,7 @@ app = Flask(__name__)
 EXCEL_FILE = "paiements.xlsx"
 
 def init_excel():
+    """ Crée le fichier Excel avec les entêtes s'il n'existe pas encore """
     if not os.path.exists(EXCEL_FILE):
         wb = openpyxl.Workbook()
         ws = wb.active
@@ -27,13 +28,13 @@ def index():
         montant = request.form.get('montant', 0)
         date_heure = datetime.now().strftime("%d/%m/%Y %H:%M")
 
-        # Enregistrement dans le fichier Excel
+        # 1. Ajout automatique d'une ligne dans le fichier Excel
         wb = openpyxl.load_workbook(EXCEL_FILE)
         ws = wb["Paiements"]
         ws.append([date_heure, nom, classe, type_frais, montant])
         wb.save(EXCEL_FILE)
 
-        # Transmettre les données au reçu
+        # 2. Préparation des données pour le ticket d'impression
         donnees_recu = {
             'nom': nom,
             'classe': classe,
@@ -47,7 +48,12 @@ def index():
 @app.route('/download')
 def download():
     init_excel()
-    return send_file(EXCEL_FILE, as_attachment=True)
+    return send_file(
+        EXCEL_FILE,
+        as_attachment=True,
+        download_name="historique_paiements.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
 if __name__ == '__main__':
     app.run()
