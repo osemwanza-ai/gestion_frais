@@ -3,7 +3,7 @@ import openpyxl
 import os
 from datetime import datetime
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 EXCEL_FILE = "paiements.xlsx"
 
