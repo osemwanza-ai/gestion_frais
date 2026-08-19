@@ -1,3 +1,8 @@
+
+osée Mwanza
+08:34 (il y a 0 minute)
+À moi
+
 from flask import Flask, render_template, request, send_file
 import openpyxl
 from datetime import datetime
@@ -5,10 +10,12 @@ import os
 
 app = Flask(__name__)
 
-EXCEL_FILE = "paiements.xlsx"
+# Utilisation d'un chemin d'accès absolu pour éviter les erreurs sur Render
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+EXCEL_FILE = os.path.join(BASE_DIR, "paiements.xlsx")
 
 def init_excel():
-    """ Crée le fichier Excel avec les entêtes s'il n'existe pas encore """
+    """ Crée le fichier Excel avec les en-têtes s'il n'existe pas encore """
     if not os.path.exists(EXCEL_FILE):
         wb = openpyxl.Workbook()
         ws = wb.active
@@ -50,10 +57,7 @@ def download():
     init_excel()
     return send_file(
         EXCEL_FILE,
-        as_attachment=True,
-        download_name="historique_paiements.xlsx",
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        as_attachment=True
     )
-
 if __name__ == '__main__':
     app.run()
